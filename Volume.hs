@@ -16,8 +16,8 @@ maybeHead x = Just $ head x
 pp :: Sink -> IO ()
 pp s = do
   putStr $ if mute s
-             then "<fc=#00FFFF>"
-             else "<fc=#FF0000>"
+             then "<fc=#FF0000>"
+             else "<fc=#00FFFF>"
   putStr $ show $ vol s
   putStrLn "</fc>"
 
