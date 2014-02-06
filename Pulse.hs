@@ -1,6 +1,7 @@
 {-#LANGUAGE NoMonomorphismRestriction, FlexibleContexts #-}
 module Pulse
        ( getSinks
+       , sinkByID
          
        , Sink
        , sink_id
@@ -30,6 +31,24 @@ until p end = do
 parseField f = do
   manyTill anyChar (try $ string (f ++ ": "))
   manyTill anyChar newline
+
+
+maybeHead :: [a] -> Maybe a
+maybeHead [] = Nothing
+maybeHead x = Just $ head x
+
+has :: Eq a => (t -> a) -> a -> t -> Bool
+has f c x = c == f x
+
+-- | @sinkByID sink_num@ is the sink with id @sink_num@
+sinkByID :: Int -> IO Sink
+sinkByID sink_num = do
+  sinks <- getSinks
+  let selected = maybeHead $ filter (has sink_id sink_num) sinks
+  case selected of
+    Nothing -> error  $ "Found no sink with id " ++ (show sink_num)
+    Just s -> return $ s
+
 
 -- | parseSink parses (part) of the output of pactl list sinks
 parseSink :: Stream s m Char => ParsecT s u m Sink

@@ -15,14 +15,23 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  build-depends:       base ==4.6.*, 
+  build-depends:       base ==4.6.*,    
                        parsec ==3.1.*, 
-                       process ==1.1.*
+                       process ==1.1.*,
+                       transformers ==0.3.*
   exposed-modules:     Pulse
 
-executable pavol
-  main-is: Volume.hs       
+executable papipe
+  main-is: Combine.hs
+  build-depends:       base ==4.6.*, 
+                       parsec ==3.1.*, 
+                       process ==1.1.*,
+                       transformers ==0.3.*
+
+executable painfo
+  main-is: PAInfo.hs       
   -- other-modules:       
   build-depends:       base ==4.6.*, 
                        parsec ==3.1.*, 
-                       process ==1.1.*
+                       process ==1.1.*,
+                       transformers ==0.3.*
