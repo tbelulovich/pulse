@@ -22,7 +22,7 @@ buildCommand cname s t =
 
 loopcommand :: String -> String -> String
 loopcommand source sink =
-  "load-module module-loopback source="
+  "pactl load-module module-loopback source="
     ++ source
     ++ " sink="
     ++ sink
