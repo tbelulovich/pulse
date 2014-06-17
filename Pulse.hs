@@ -10,6 +10,7 @@ module Pulse
        , name
        )
        where 
+
 import Control.Applicative
 import Control.Monad
 
@@ -49,6 +50,11 @@ sinkByID sink_num = do
     Nothing -> error  $ "Found no sink with id " ++ (show sink_num)
     Just s -> return $ s
 
+parsePct :: Stream s m Char => ParsecT s u m Int
+parsePct = do
+  y <- many digit
+  string "%"
+  return $ read y
 
 -- | parseSink parses (part) of the output of pactl list sinks
 parseSink :: Stream s m Char => ParsecT s u m Sink
@@ -61,15 +67,12 @@ parseSink = do
         "yes" -> True
         "no" -> False
   manyTill anyChar (try $ string "Volume: ")
-  many digit
-  string ":"
-  many space
-  y <- many digit
-  string "%"
+  manyTill anyChar (try $ lookAhead parsePct)
+  y <- parsePct
   manyTill anyChar (try $ newline >> ((void newline) <|> eof))
   return $ Sink { sink_id = read x
                 , mute = mbool
-                , vol = read y
+                , vol =  y
                 , name = n
                 }
     
